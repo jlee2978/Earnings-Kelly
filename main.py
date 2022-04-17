@@ -19,28 +19,30 @@ def main():
     capital += premium;
 
     # lists to holds strikes and days to expiry of call and put contracts
-    clk, clt, csk, cst = [];
-    plk, plt, psk, pst = [];
+    clk, clt = ([] * cLong for i in range(2));
+    csk, cst = ([] * cShort for i in range(2));
+    plk, plt = ([] * pLong for i in range(2));
+    psk, pst = ([] * pShort for i in range(2));
 
     # for each long call contract, enter strike and days to expiry
-    for i in range(cLong):
-        clk[i] = float(input("Long call #" + i + " strike price: "));
-        clt[i] = float(input("Long call #" + i + " days to expiry: "));
+    for i in range(cLong):     
+        clk.append(float(input("Long call #" + str(i+1) + " strike price: ")));
+        clt.append(float(input("Long call #" + str(i+1) + " days to expiry: ")));
 
     # for each long put contract, enter strike and days to expiry
     for i in range(pLong):
-        plk[i] = float(input("Long put #" + i + " strike price: "));
-        plt[i] = float(input("Long put #" + i + " days to expiry: "));
+        plk.append(float(input("Long put #" + str(i+1) + " strike price: ")));
+        plt.append(float(input("Long put #" + str(i+1) + " days to expiry: ")));
 
     # for each short call contract, enter strike and days to expiry
     for i in range(cShort):
-        csk[i] = float(input("Short call #" + i + " strike price: "));
-        cst[i] = float(input("Short call #" + i + " days to expiry: "));
+        csk.append(float(input("Short call #" + str(i+1) + " strike price: ")));
+        cst.append(float(input("Short call #" + str(i+1) + " days to expiry: ")));
 
     # for each short put contract, enter strike and days to expiry
     for i in range(pShort):
-        psk[i] = float(input("Short put #" + i + " strike price: "));
-        pst[i] = float(input("Short put #" + i + " days to expiry: "));
+        psk.append(float(input("Short put #" + str(i+1) + " strike price: ")));
+        pst.append(float(input("Short put #" + str(i+1) + " days to expiry: ")));
 
     # for loop iterating X (eg. 1000) times for Monte Carlo simulation
     # randomize stock price based on historical movements and calculate payout of each contract and net it to capital
@@ -55,18 +57,22 @@ def main():
         # close open long call contracts
         for j in range(cLong):
             profit += call(s, clk[j], r, clt[j], vol);
+            print(profit);
 
         # close open short call contracts
         for j in range(cShort):
             profit -= call(s, csk[j], r, cst[j], vol);
+            print(profit);
 
         # close open long put contracts
         for j in range(pLong):
             profit += put(s, plk[j], r, plt[j], vol);
+            print(profit);
 
         # close open short put contracts
         for j in range(pShort):
             profit -= put(s, psk[j], r, pst[j], vol);
+            print(profit);
 
         capital += profit;
 
@@ -74,14 +80,17 @@ def main():
 
     print(capital);
 
+
+
+
     # TESTING BSM MODEL BELOW
 
     # s = stock price, k = strike price, r = interest rate in %, t = years to expiry, vol annual volatility in %    
-    s = float(input("Stock spot price: "));
-    k = float(input("Strike price: "));
-    r = float(input("Risk free rate (%): "));
-    t = float(input("Days to expiry: "));
-    vol = float(input("Volatility (%): "));
+    # s = float(input("Stock spot price: "));
+    # k = float(input("Strike price: "));
+    # r = float(input("Risk free rate (%): "));
+    # t = float(input("Days to expiry: "));
+    # vol = float(input("Volatility (%): "));
 
     # call(s, k, r/100, t/365, vol/100);
     # put(s, k, r/100, t/365, vol/100);
