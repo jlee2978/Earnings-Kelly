@@ -26,7 +26,8 @@ def main():
     pShort = int(input("Number of short put contracts opening: "));
     premium = float(input("Premium received (-paid): "));   # can be negative
     maxLoss = float(input("Max loss based on trade structure (enter as positive number): "));
-    portfolio = [[] for i in range(len(sizing))];
+    # portfolio = [[] for i in range(len(sizing))];
+    portfolio = [];
 
     # lists to holds strikes and days to expiry of call and put contracts
     clk, clt = ([] * cLong for i in range(2));      # call long strike, call long time to expiry
@@ -60,7 +61,8 @@ def main():
     iterations = int(input("Iterations to run per sizing: "));
 
     # trade sizing
-    for k in range(len(sizing)):    
+    for k in range(len(sizing)):
+        sizeIteration = [];    
         for i in range(iterations):
             # size is adjusted for each iteration
             size = capital * sizing[k]/100;
@@ -68,7 +70,6 @@ def main():
             n = math.floor(size/maxLoss);
 
             # apply premium for each iteration
-            # capital += premium * n;       # n = number of contracts = (iCapital * sizing/100)/maxLoss
             capital += n * premium;
             profit = 0;
 
@@ -92,13 +93,25 @@ def main():
                 profit -= n * put(post, psk[j], r, pst[j]/365, vol);
 
             capital += profit;
-            portfolio.append(capital);
+            # portfolio.append(capital);
+            sizeIteration.append(capital);
 
         # reset capital after all iterations are complete for a particular trade sizing simulation run
         capital = iCapital;
 
         # starting new row in 2D array to represent next iteration with different trade sizing
-        portfolio.append([capital])
+        # portfolio.append([capital])
+        portfolio.append(sizeIteration);
+
+
+    # print(portfolio[0][0]);
+    print(portfolio);
+
+    # print portfolio array to check if accurate
+    # for i in range(len(portfolio)):
+    #     for j in range(len(portfolio[i])):
+    #         print(portfolio[i][j]);
+
 
 
     # print(capital);
