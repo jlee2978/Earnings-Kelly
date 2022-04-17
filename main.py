@@ -44,7 +44,7 @@ def main():
         psk.append(float(input("Short put #" + str(i+1) + " strike price: ")));
         pst.append(float(input("Short put #" + str(i+1) + " days to expiry: ")));
 
-    # for loop iterating X (eg. 1000) times for Monte Carlo simulation
+    # for loop iterating n (eg. 1000) times for Monte Carlo simulation
     # randomize stock price based on historical movements and calculate payout of each contract and net it to capital
     iterations = int(input("Iterations to run: "));
 
@@ -56,23 +56,19 @@ def main():
 
         # close open long call contracts
         for j in range(cLong):
-            profit += call(s, clk[j], r, clt[j], vol);
-            print(profit);
+            profit += call(s, clk[j], r, clt[j]/365, vol/100);
 
         # close open short call contracts
         for j in range(cShort):
-            profit -= call(s, csk[j], r, cst[j], vol);
-            print(profit);
+            profit -= call(s, csk[j], r, cst[j]/365, vol/100);
 
         # close open long put contracts
         for j in range(pLong):
-            profit += put(s, plk[j], r, plt[j], vol);
-            print(profit);
+            profit += put(s, plk[j], r, plt[j]/365, vol/100);
 
         # close open short put contracts
         for j in range(pShort):
-            profit -= put(s, psk[j], r, pst[j], vol);
-            print(profit);
+            profit -= put(s, psk[j], r, pst[j]/365, vol/100);
 
         capital += profit;
 
@@ -100,13 +96,13 @@ def call (s, k, r, t, vol):
     d2 = d1 - vol * math.sqrt(t);
     c = norm.cdf(d1) * s - norm.cdf(d2) * k * math.exp(-r*t);
     print(c);
-    return c;
+    return c * 100;
 
 def put (s, k, r, t, vol):
     d1 = (math.log(s/k) + (r + (vol**2)/2) * t) / (vol * math.sqrt(t));
     d2 = d1 - vol * math.sqrt(t);
     p = norm.cdf(-d2) * k * math.exp(-r*t) - norm.cdf(-d1) * s;
     print(p);
-    return p;
+    return p * 100;
 
 main();
