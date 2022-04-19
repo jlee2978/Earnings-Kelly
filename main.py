@@ -123,9 +123,12 @@ def main():
     fileName = stock + ".csv";
     filedir = os.path.join(os.path.dirname(__file__), '..', 'Exports', 'Earnings - Kelly', fileName);
 
+    for i in range(len(sizing)):
+        sizing[i] = str(sizing[i]) + "%";
+
     # convert sizing list to dataframe
     sizingDF = pd.DataFrame(sizing);
-
+    
     # convert portfolio list to dataframe
     portfolioDF = pd.DataFrame(portfolio);
     # portfolioDF.T.to_csv(filedir);
