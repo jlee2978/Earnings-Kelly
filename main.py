@@ -1,16 +1,18 @@
-import math
+import math, random, csv, os
 from scipy import stats
 from scipy.stats import norm
 # from numpy import array
-import random
 
 # list of # moves post-earnings of stock
-moves = [10.47,1.61,2.09,2.26,2.04,4.91,6.83,6.63,5.89,4.42,4.34,2.61,4.73,0.31,6.1,2.25,6.5,6.26,6.57,4.12,4.23,1.58,5.65,2.72,2.61,8.2,7.99,2.49,5.14,0.16,12.35,0.91,4.32,8.87,6.24,5.59,2.67,2.42,0.53,2.68,0.93,5.98,1.41,4.69];   # AAPL
+# moves = [10.47,1.61,2.09,2.26,2.04,4.91,6.83,6.63,5.89,4.42,4.34,2.61,4.73,0.31,6.1,2.25,6.5,6.26,6.57,4.12,4.23,1.58,5.65,2.72,2.61,8.2,7.99,2.49,5.14,0.16,12.35,0.91,4.32,8.87,6.24,5.59,2.67,2.42,0.53,2.68,0.93,5.98,1.41,4.69];   # AAPL
+moves = [0];
 
 # sizing of trades
-sizing = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+# sizing = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+sizing = [10, 100];
 
 def main():
+    stock = input("Stock ticker: ");
     capital = float(input("Starting capital: "));
     iCapital = capital;
     s = float(input("Stock spot price: "));
@@ -69,8 +71,9 @@ def main():
             # n = number of contracts for this iteration
             n = math.floor(size/maxLoss);
 
-            # apply premium for each iteration
+            # apply premium for each iteration and multiply by number of contracts for that iteration
             capital += n * premium;
+            print("capital: " + str(capital));
             profit = 0;
 
             # randomize stock price post earnings movement
@@ -92,9 +95,13 @@ def main():
             for j in range(pShort):
                 profit -= n * put(post, psk[j], r, pst[j]/365, vol);
 
+            print("profit: " + str(profit));
             capital += profit;
+            print("capital after profits: " + str(capital));
             # portfolio.append(capital);
             sizeIteration.append(capital);
+
+        print(sizeIteration);
 
         # reset capital after all iterations are complete for a particular trade sizing simulation run
         capital = iCapital;
@@ -111,6 +118,14 @@ def main():
     # for i in range(len(portfolio)):
     #     for j in range(len(portfolio[i])):
     #         print(portfolio[i][j]);
+
+    fileName = stock + ".csv";
+    filedir = os.path.join(os.path.dirname(__file__), '..', 'Exports', 'Earnings - Kelly', fileName);
+
+    # with open('C:\Users\jeffr\Documents\0 Programming\Python\Options\Exports\Earnings - Kelly', 'w') as f:
+    with open(filedir, 'wb') as f:
+        writer = csv.writer(f);
+        writer.writerow(sizing);        # to fix: convert list to string
 
 
 
